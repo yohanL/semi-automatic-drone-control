@@ -1,0 +1,9 @@
+﻿Pour lancer le drone avec le code du professeur :
+
+source ros-ws/devel/setup.bash 
+
+roslaunch bebop_driver bebop_node.launch
+
+rosrun demo_teleop safe_drone_teleop.py reset:=/bebop/reset takeoff:=/bebop/takeoff land:=/bebop/land cmd_vel_out:=/bebop/cmd_vel
+
+rosrun rqt_image_view rqt_image_view
