@@ -1,2 +1,8 @@
 Pour testvp.py, mettre 0 en premier argument et img.png en deuxieme argument pour le point IR
 Sinon mettre 1 en premier argument et img.png en deuxieme argument pour le point ER
+
+Exemples :
+
+python testvp.py 0 img8.png 
+
+python testvp.py 1 img8.png
