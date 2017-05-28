@@ -1,0 +1,5 @@
+Just modify the two scripts "irvp.py" and "ervp.py"
+
+In each script it takes about 0.15s to calculate the intersection points.If we do this just one time, il can also save time
+
+All the time are calculate by my camputer, i wonder if it will change according the device. We can test
