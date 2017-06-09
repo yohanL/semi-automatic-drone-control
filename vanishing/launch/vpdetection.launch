@@ -1,0 +1,12 @@
+<launch>
+ 
+<node pkg="usb_cam" type="usb_cam_node" name="usb_cam"/>
+
+<node pkg="vanishing" type="testvp.py" name="testvp">
+      <remap to="/usb_cam/image_raw/compressed" from="/image_in/compressed"/>
+</node>
+
+<node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" 
+output="screen"/>
+
+</launch>
