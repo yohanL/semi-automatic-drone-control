@@ -15,7 +15,7 @@ def findIntersection(image):
     img = image
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    longueur = 50 #longueur pour eliminer segments courts
+    longueur = 20 #longueur pour eliminer segments courts
     height = float(np.size(img, 0))
     width = float(np.size(img, 1))
 
@@ -29,17 +29,18 @@ def findIntersection(image):
         y1 = lines[[j],[0],[1]]
         x2 = lines[[j],[0],[2]]
         y2 = lines[[j],[0],[3]]
-        if (math.sqrt((x1-x2)**2+(y1-y2)**2)<longueur):
+        if ((math.sqrt((x1-x2)**2+(y1-y2)**2)<longueur) or (math.degrees(math.atan(abs((x1-x2)/(y1-y2)))) < 3) ):
             lines = np.delete(lines,j,0)
             linesLen-=1
         else:
             j+=1
         
     drawn_img = lsd.drawSegments(img,lines)
-
+    #drawn_img = img
+    
     linesList = np.squeeze(lines)
 
-    print('nb lignes = '+str(linesLen))
+    #print('nb lignes = '+str(linesLen))
 
     c1Points=[] #liste des points d'intersection repere cartesien 1
 
@@ -54,9 +55,11 @@ def findIntersection(image):
                     c1Points.append(getIntersection(linesList[j],linesList[k]))          
 
     pointsLen=len(c1Points)
-    print ('nb pts intersection = '+str(pointsLen))
+    #print ('nb pts intersection = '+str(pointsLen))
 
+    """
     for m in range(0,pointsLen): #on dessine les points d'intersection
         cv2.circle(drawn_img,(int(c1Points[m][0]),int(c1Points[m][1])),2,(0,0,0),-1)
-  
+    """
+    
     return c1Points, drawn_img
