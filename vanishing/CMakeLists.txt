@@ -3,6 +3,7 @@ project(vanishing)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  rospy_tutorials
   sensor_msgs
   std_msgs
 )
