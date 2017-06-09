@@ -11,6 +11,7 @@ import rospy
 from sensor_msgs.msg import CompressedImage
 from rospy.numpy_msg import numpy_msg
 from rospy_tutorials.msg import Floats
+from geometry_msgs.msg import PolygonStamped, Polygon, Point32
 
 
 class ImageProcessing:
@@ -18,7 +19,7 @@ class ImageProcessing:
     def __init__(self):
         self.sub    = rospy.Subscriber("/image_in/compressed",  CompressedImage, self.on_image,  queue_size = 1)
         self.pub1    = rospy.Publisher ("/image_out/compressed", CompressedImage,                 queue_size = 1)
-        self.pub2    = rospy.Publisher ("/vpCoord", numpy_msg(Floats), queue_size = 1)
+        self.pub2    = rospy.Publisher ("/vpCoord", PolygonStamped, queue_size = 1)
         self.margin = 50
         
     def on_image(self, ros_data):
@@ -33,24 +34,41 @@ class ImageProcessing:
         image_out = imgVis(image_in,p1,p2)
         #### Publishing image ####
         msg              = CompressedImage()
-        msg.header.stamp = rospy.Time.now()
+        time = rospy.Time.now()
+        msg.header.stamp = time
         msg.format       = "jpeg"
         msg.data         = np.array(cv2.imencode('.jpg', image_out)[1]).tostring()
         self.pub1.publish(msg)
 
         #### Publishing vp coord######
 
-        #vpCoord = np.empty(shape=[0,2])
-        #vpCoord = np.insert(vpCoord,vpCoord.shape[0],p3,axis=0)
-        #if(len(p4)!=0):
-        #    vpCoord = np.insert(vpCoord,vpCoord.shape[0],p4,axis=0)
-
-        if(len(p4)!=0):
-            vpCoord = np.array([p3[0],p3[1],p4[0],p4[1]],dtype=np.float32)
-        else:
-            vpCoord = np.array([p3[0],p3[1]],dtype=np.float32)
+        pList = PolygonStamped()
+        pList.header.stamp = time
+        pList.header.frame_id = "id"
         
-        self.pub2.publish(vpCoord)
+        point3 = Point32()
+        point3.x = p3[0]
+        point3.y = p3[1]
+        #point3.z = 0
+        
+        if(len(p4)!=0):
+            point4 = Point32()
+            point4.x = p4[0]
+            point4.y = p4[1]
+            #point4.z = 0
+
+            pList.polygon.points = [point3,point4]
+
+            #vpCoord = np.array([p3[0],p3[1],p4[0],p4[1]],dtype=np.float32)
+        else:
+
+            pList.polygon.points = [point3]
+            
+            #vpCoord = np.array([p3[0],p3[1]],dtype=np.float32)
+
+
+        self.pub2.publish(pList)
+        #self.pub2.publish(vpCoord)
 
         ##########
     
