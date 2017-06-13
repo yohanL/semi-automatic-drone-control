@@ -1,0 +1,12 @@
+<launch>
+
+<include file="$(find bebop_driver)/launch/bebop_node.launch"/>	
+
+<node pkg="topic_tools" type="drop" name="drop" args="/bebop/image_raw/compressed 5 6 /image_in/compressed"/>
+
+<node pkg="vanishing" type="testvp.py" name="testvp"/>
+
+<node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" 
+output="screen"/>
+
+</launch>
