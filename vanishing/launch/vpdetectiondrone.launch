@@ -1,10 +1,21 @@
 <launch>
 
-<include file="$(find bebop_driver)/launch/bebop_node.launch"/>	
+<include file="$(find bebop_driver)/launch/bebop_node.launch"/>
 
-<node pkg="topic_tools" type="drop" name="drop" args="/bebop/image_raw/compressed 5 6 /image_in/compressed"/>
+<node pkg="demo_teleop" type="safe_drone_teleop.py" name="safe_drone_teleop">
+       <remap to="/bebop/reset" from="reset"/>
+       <remap to="/bebop/takeoff" from="takeoff"/>
+       <remap to="/bebop/land" from="land"/>
+       <remap to="/bebop/cmd_vel" from="cmd_vel_out"/>
+</node>
+
+<node pkg="topic_tools" type="drop" name="drop" args="/bebop/image_raw/compressed 9 10 /image_in/compressed"/>
 
 <node pkg="vanishing" type="testvp.py" name="testvp"/>
+
+<node pkg="vanishing" type="droneCtrl.py" name="droneCtrl">
+      <remap to="/bebop/cmd_vel" from="cmd_vel_out"/>
+</node>
 
 <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" 
 output="screen"/>
